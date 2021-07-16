@@ -2,7 +2,9 @@
 title: "Finding Important Variables - Advance ML - Linear Approach"
 author: "Nima Niarad"
 date: "7/15/2021"
-output: rmarkdowngithub_document
+output:
+  rmarkdown::github_document: default
+  rmarkdowngithub_document: default
 ---
 
 <style> body {text-align: justify} </style> <!-- Justify text. -->
