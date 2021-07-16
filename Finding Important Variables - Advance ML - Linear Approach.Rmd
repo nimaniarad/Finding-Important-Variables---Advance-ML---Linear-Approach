@@ -1,0 +1,66 @@
+---
+title: "Finding Important Variables - Advance ML - Linear Approach"
+author: "Nima Niarad"
+date: "7/15/2021"
+output: rmarkdowngithub_document
+---
+
+<style> body {text-align: justify} </style> <!-- Justify text. -->
+
+### Identifying the Key Variables
+
+```{r, warning=FALSE}
+library(dplyr)
+library(tidyr)
+
+MatStudent=read.table("C:/Nima/Rstudio/Git/Finding Important Variables - Advance ML - Linear Approach/Finding-Important-Variables---Advance-ML---Linear-Approach/student-mat.csv",sep=";",header=TRUE)
+
+MatStudent =na.omit(MatStudent)
+
+```
+
+### Best Subset Selection - BSS
+
+```{r}
+library(leaps)
+regfit.full = regsubsets(G3 ~ . -G1 - G2, MatStudent, nvmax =33)
+summary(regfit.full)
+```
+
+```{r}
+reg.summary = summary(regfit.full)
+```
+
+What it says is: "failures", "sex", how much time students spend on going out with their friends, and their mothers, & job types are the most important ones.
+
+### How Many Variables Should be Included in the Model
+
+RSS, Adjusted R Squared, cp and BIC
+
+
+```{r}
+par(mfrow =c(2 ,4))
+
+plot(reg.summary$rss , xlab ="Number of Variables", ylab ="RSS", type ="l")
+
+plot(reg.summary$adjr2 ,xlab ="Number of Variables", ylab = "Adjusted RSq", type ="l")
+points(15, reg.summary$adjr2[15], col = "red", cex =2, pch =20)
+
+plot(reg.summary$cp ,xlab =" Number of Variables ", ylab =" Cp", type ="l")
+points(15, reg.summary$cp [15] , col = "red ", cex =2, pch =20)
+
+plot(reg.summary$bic , xlab =" Number of Variables ", ylab =" BIC ", type="l")
+points(4, reg.summary$bic [4], col =" red ",cex =2, pch =20)
+```
+
+The best one is the one with the lowest error. On the other hand, it is the fact that when the number of predictors is going up, the error rate will go down. So, that is why cp, RSS, and adjusted R squared suggested 15 variables and have a small error in comparison with BIC which goes for 6 ones with much higher error.
+
+
+We need more evidence to choose the number of predictors, but for now 15 is our number: 
+
+```{r}
+coef(regfit.full ,15)
+```
+
+
+
